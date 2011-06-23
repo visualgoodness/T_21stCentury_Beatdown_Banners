@@ -5,7 +5,7 @@
     <flash>1</flash>
     <projectorWin>0</projectorWin>
     <projectorMac>0</projectorMac>
-    <html>1</html>
+    <html>0</html>
     <gif>0</gif>
     <jpeg>0</jpeg>
     <png>0</png>
@@ -53,7 +53,7 @@
     <WindowMode>0</WindowMode>
     <DisplayMenu>1</DisplayMenu>
     <DeviceFont>0</DeviceFont>
-    <TemplateFileName>/Users/lynch13256/Library/Application Support/Adobe/Flash CS5/en_US/Configuration/HTML/Default.html</TemplateFileName>
+    <TemplateFileName>/Users/lynch13256/Library/Application Support/Adobe/Flash CS5/en_US/Configuration/HTML/ImageMap.html</TemplateFileName>
     <showTagWarnMsg>1</showTagWarnMsg>
   </PublishHtmlProperties>
   <PublishFlashProperties enabled="true">
@@ -74,7 +74,7 @@
     <ActionScriptVersion>3</ActionScriptVersion>
     <PackageExportFrame>1</PackageExportFrame>
     <PackagePaths></PackagePaths>
-    <AS3PackagePaths>.;/Users/lynch13256/Development/VisualGoodness/Projects/VGFramework/src</AS3PackagePaths>
+    <AS3PackagePaths>.;/Users/lynch13256/Development/VisualGoodness/Projects/VGFramework/src;/Users/lynch13256/Development/Flash/Framework/greensock-as3</AS3PackagePaths>
     <AS3ConfigConst>CONFIG::FLASH_AUTHORING=&quot;true&quot;;</AS3ConfigConst>
     <DebuggingPermitted>1</DebuggingPermitted>
     <DebuggingPassword></DebuggingPassword>

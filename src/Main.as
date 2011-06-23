@@ -3,80 +3,62 @@ package
 	import com.visualgoodness.controller.VGKeyboard;
 	
 	import flash.display.MovieClip;
-	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
 	
-	public class Main extends Sprite
+	public class Main extends MovieClip implements IInputDelegate, IStartMenuDelegate
 	{
-		private var _bag:Bag;
+		private var _bag:IBag;
 		private var _gloves:Gloves;
-		private var _keyboard:VGKeyboard;
-		private var _mouseHitArea:MovieClip;
 		private var _score:ScoreKeeper;
 		private var _panel:Panel;
-		
+		private var _inputManager:BoxingInputManager;
+		private var _startMenu:StartMenu;
 		
 		public function Main()
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			
-			_mouseHitArea = this["mouse_hit_mc"] as MovieClip;
-			_bag = this["bag_mc"] as Bag;
+			_bag = this["bag_mc"] as IBag;
 			_gloves = this["gloves_mc"] as Gloves;
 			_panel = this["panel_mc"] as Panel;
+			_startMenu = this["start_menu_mc"] as StartMenu;
+			_startMenu.delegate = this;
 			_score = new ScoreKeeper();
 			_panel.scoreKeeper = _score;
-			
-			_gloves.addEventListener(Gloves.L_HIT, hit);
-			_gloves.addEventListener(Gloves.R_HIT, hit);
-			
-			// Activate keyboard input
-			_keyboard = new VGKeyboard();
-			_keyboard.activate(stage);
-			_keyboard.poll(VGKeyboard.LEFT, swing);
-			_keyboard.poll(VGKeyboard.RIGHT, swing);
-			_keyboard.poll(VGKeyboard.UP, swing);
-			_keyboard.poll(VGKeyboard.DOWN, swing);
-			_keyboard.startPolling(1000/18);
-			
-			_mouseHitArea.buttonMode = true;
-			_mouseHitArea.addEventListener(MouseEvent.CLICK, clicked);
+			_bag.scoreKeeper = _score;
+			_gloves.addEventListener(HitEvent.L_HIT, hit);
+			_gloves.addEventListener(HitEvent.R_HIT, hit);
 		}
 		
-		private function swing(key:int):void
+		public function start(insuranceCoIndex:int):void
 		{
-			_gloves.punch(key);
+			gotoAndPlay("startGame");
+			activateInputs();
 		}
 		
-		private function hit(e:Event):void
+		private function activateInputs():void
+		{
+			_inputManager = new BoxingInputManager(this, this["mouse_hit_mc"] as MovieClip);
+		}
+		
+		public function swing(punch:int):void
+		{
+			_gloves.punch(punch);
+		}
+		
+		private function hit(e:HitEvent):void
 		{
 			_score.hit();
-			if (e.type == Gloves.R_HIT)
-				_bag.hit(VGKeyboard.RIGHT);
-			else if (e.type == Gloves.L_HIT)
-				_bag.hit(VGKeyboard.LEFT);
-		}
-		
-		private function clicked(e:MouseEvent):void
-		{
-			var t:MovieClip = e.currentTarget as MovieClip;
-			var mx:Number = t.mouseX - t.width/2;
-			var my:Number = -t.mouseY + t.height/2;
-			var area:int = 0;
-			var rad:Number = Math.atan2(my,mx) / Math.PI * 180;
-			
-			// DIAGONAL
-			/*if (rad < 45 && rad > -45) swing(VGKeyboard.RIGHT);
-			if (rad > 135 && rad < 180) swing(VGKeyboard.LEFT);
-			if (rad > -180 && rad < -135) swing(VGKeyboard.LEFT);
-			if (rad > -135 && rad < -45) swing(VGKeyboard.DOWN);
-			if (rad > 45 && rad < 135) swing(VGKeyboard.UP);*/
-			
-			// HALF
-			if (mx > 0) swing(VGKeyboard.RIGHT);
-			else swing(VGKeyboard.LEFT);
+			if (e.type == HitEvent.R_HIT)
+			{
+				//_bag.hit(VGKeyboard.RIGHT);
+				_bag.hitWithLoc(Gloves.JAB_R, e.anchor);
+			}
+			else if (e.type == HitEvent.L_HIT)
+			{
+				//_bag.hit(VGKeyboard.LEFT);
+				_bag.hitWithLoc(Gloves.JAB_L, e.anchor);
+			}
 		}
 	}
 }

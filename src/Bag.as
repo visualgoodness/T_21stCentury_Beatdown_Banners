@@ -26,6 +26,10 @@ package
 			addEventListener(Event.ENTER_FRAME, update);
 		}
 		
+		public function set scoreKeeper(value:ScoreKeeper):void {}
+			
+		public function hitWithLoc(key:int, anchor:MovieClip):void {}
+		
 		public function hit(key:int):void
 		{
 			if (_hitTarget == null) _hitTarget = _parts[0] as BagPart;

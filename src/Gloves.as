@@ -1,16 +1,16 @@
 package
 {
-	import com.visualgoodness.controller.VGKeyboard;
-	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.utils.setTimeout;
 	
 	public class Gloves extends Sprite
-	{
-		public static const R_HIT:String = "gloveRHit";
-		public static const L_HIT:String = "gloveLHit";		
+	{	
+		public static const JAB_R:int = 0;
+		public static const JAB_L:int = 1;
+		public static const HOOK:int = 2;
+		public static const LOW:int = 3;
 		
 		private var _gloves:Array = [];
 		private var _gloveR:Glove;
@@ -22,55 +22,90 @@ package
 		private var _gloveRStartX:Number;
 		private var _endFrameOffset:int = 5;
 		private var _gloveLStartX:Number;
+		private var _hittingGlove:Glove = new Glove();
+		private var _nonHitGlove:Glove;
+		private var _punchType:String;
+		private var _alternate:Boolean = false;
+		private var _doIdleMovement:Boolean = true;
 		
 		public function Gloves()
 		{
 			_gloveR = this["glove_R"] as Glove;
 			_gloveL = this["glove_L"] as Glove;
+			_gloveL.gloveFrame = 2;
 			_gloves = [ _gloveL, _gloveR ];
 			
 			_gloveRStartX = _gloveR.x;
 			_gloveLStartX = _gloveL.x;
 			
+			_gloveL.addEventListener(HitEvent.HIT_COMPLETE, hitComplete);
+			_gloveR.addEventListener(HitEvent.HIT_COMPLETE, hitComplete);
+			
 			addEventListener(Event.ENTER_FRAME, enterFrame);
 		}
 		
-		public function punch(key:int):void
+		private function hitComplete(e:Event):void
 		{
-			if (key == VGKeyboard.LEFT)
+			_hittingGlove.hitting = false;
+		}
+		
+		public function toggleIdleMovement():void
+		{
+			_doIdleMovement = !_doIdleMovement;
+		}
+		
+		public function punch(type:int):void
+		{
+			if (!_hittingGlove.hitting)
 			{
-				setChildIndex(_gloveR, numChildren-1);
-				_gloveL.hitting = true;
+				if (type == JAB_L)
+				{
+					_hittingGlove = _gloveL;
+					_nonHitGlove = _gloveR;
+					_punchType = "jab";
+				}
+				else if (type == JAB_R) 
+				{ 
+					_hittingGlove = _gloveR;
+					_nonHitGlove = _gloveL;
+					_punchType = "jab";
+				}
+				else if (type == HOOK)
+				{
+					selectOtherGlove();
+					_punchType = "hook";
+				}
+				else if (type == LOW) 
+				{ 
+					selectOtherGlove();
+					_punchType = "low";
+				}
+				
+				setChildIndex(_hittingGlove, 0);
+				_hittingGlove.gotoAndPlay(_punchType);
+				_hittingGlove.hitting = true;
 			}
-			else if (key == VGKeyboard.RIGHT)
-			{
-				setChildIndex(_gloveL, numChildren-1);
-				_gloveR.hitting = true;
-			}
+		}
+		
+		private function selectOtherGlove():void
+		{
+			_alternate = !_alternate;
+			_hittingGlove = _alternate ? _gloveR : _gloveL;
+			_nonHitGlove = _alternate ? _gloveL : _gloveR;
 		}
 		
 		private function enterFrame(e:Event):void
 		{
 			_angle += _hoverSpeed;
 			
-			if (_gloveR.hitting)
-			{
-				if (_gloveR.currentFrame == 1) _gloveR.play();
-				else if (_gloveR.currentFrame >= _gloveR.totalFrames-_endFrameOffset) _gloveR.hitting = false;
-			}
-			else
+			if (!_gloveR.hitting && _doIdleMovement)
 			{
 				_gloveR.targPos.y = -_hoverReachY/2 + Math.sin(_angle) * _hoverReachY;
 				_gloveR.targPos.x = _gloveRStartX + -_hoverReachX/2 + Math.cos(_angle) * -_hoverReachX;
 			}
 			
-			if (_gloveL.hitting)
+			if (!_gloveL.hitting && _doIdleMovement)
 			{
-				if (_gloveL.currentFrame == 1) _gloveL.play();
-				else if (_gloveL.currentFrame >= _gloveL.totalFrames-_endFrameOffset) _gloveL.hitting = false;
-			}
-			else
-			{	
 				_gloveL.targPos.y = -_hoverReachY/2 + Math.sin(_angle + Math.PI) * _hoverReachY;
 				_gloveL.targPos.x = _gloveLStartX + -_hoverReachX/2 + Math.cos(_angle + Math.PI) * _hoverReachX;
 			}

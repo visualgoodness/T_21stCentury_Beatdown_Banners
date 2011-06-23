@@ -17,6 +17,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>[source path] com</name>
+			<type>2</type>
+			<location>/Users/lynch13256/Development/Flash/Framework/greensock-as3/com</location>
+		</link>
+		<link>
 			<name>[source path] src</name>
 			<type>2</type>
 			<location>/Users/lynch13256/Development/VisualGoodness/Projects/VGFramework/src</location>
