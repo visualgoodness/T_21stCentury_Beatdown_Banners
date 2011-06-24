@@ -1,9 +1,11 @@
-package
+package com.visualgoodness.compbeatdown.controller
 {
 	import com.visualgoodness.controller.VGKeyboard;
 	
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
+	import com.visualgoodness.compbeatdown.interfaces.IInputDelegate;
+	import com.visualgoodness.compbeatdown.view.Gloves;
 
 	public class BoxingInputManager
 	{
@@ -15,9 +17,12 @@ package
 		{
 			_delegate = delegate;
 			_mouseHitArea = mouseHitArea;
-			
+		}
+		
+		public function activate():void
+		{	
 			// Activate keyboard input
-			_keyboard = new VGKeyboard();
+			if (!_keyboard) _keyboard = new VGKeyboard();
 			_keyboard.activate(_mouseHitArea.stage);
 			_keyboard.poll(VGKeyboard.LEFT, onInput);
 			_keyboard.poll(VGKeyboard.RIGHT, onInput);
@@ -26,7 +31,17 @@ package
 			_keyboard.startPolling(1000/18);
 			
 			_mouseHitArea.buttonMode = true;
+			_mouseHitArea.mouseEnabled = true;
 			_mouseHitArea.addEventListener(MouseEvent.CLICK, clicked);
+		}
+		
+		public function deactivate():void
+		{	
+			_keyboard.resetPolls();
+		
+			_mouseHitArea.buttonMode = false;
+			_mouseHitArea.mouseEnabled = false;
+			_mouseHitArea.removeEventListener(MouseEvent.CLICK, clicked);
 		}
 		
 		private function onInput(keyCode:int):void
@@ -35,14 +50,18 @@ package
 			switch(keyCode)
 			{
 				case VGKeyboard.LEFT:
+				case VGKeyboard.D:
 					punch = Gloves.JAB_L;
 					break;
 				case VGKeyboard.RIGHT:
+				case VGKeyboard.A:
 					punch = Gloves.JAB_R;
 					break;
 				case VGKeyboard.UP:
+				case VGKeyboard.W:
 					punch = Gloves.HOOK;
 					break;
+				case VGKeyboard.S:
 				case VGKeyboard.DOWN:
 					punch = Gloves.LOW;
 					break;

@@ -1,4 +1,4 @@
-package
+package com.visualgoodness.compbeatdown.interfaces
 {
 	public interface IInputDelegate
 	{

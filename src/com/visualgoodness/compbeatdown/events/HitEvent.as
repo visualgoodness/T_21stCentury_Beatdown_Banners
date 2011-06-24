@@ -1,4 +1,4 @@
-package 
+package com.visualgoodness.compbeatdown.events 
 {
 	import flash.display.MovieClip;
 	import flash.events.Event;

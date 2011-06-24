@@ -1,4 +1,4 @@
-package
+package com.visualgoodness.compbeatdown.view
 {
 	import com.greensock.TweenNano;
 	import com.greensock.easing.Sine;
@@ -6,6 +6,9 @@ package
 	
 	import flash.display.MovieClip;
 	import flash.geom.Point;
+	import com.visualgoodness.compbeatdown.events.ReactionEvent;
+	import com.visualgoodness.compbeatdown.interfaces.IBag;
+	import com.visualgoodness.compbeatdown.model.ScoreKeeper;
 	
 	public class Bag2 extends MovieClip implements IBag
 	{
@@ -49,13 +52,12 @@ package
 			var p:Point = anchor.localToGlobal(new Point(anchor.x, anchor.y));
 			var q:Point = _bagBody.globalToLocal(p);
 			var loc:Number = ((q.x / _bagBody.widthMarker.width) - 0.5) * 1.5;
-			trace(q.x, _bagBody.width);
 			loc = loc > 1 ? 1 : loc < -1 ? -1 : loc;
 			h.scaleX = 1 - Math.abs(loc);
 			h.x = q.x;
 			h.y = q.y;
 			h.body.rotation = loc * (15 + Math.random() * 30);
-			TweenNano.to(h, 1.0, { alpha:0, delay:0.8, onComplete:removeHitOverlay});
+			TweenNano.to(h, 1.8, { alpha:0, delay:0.8, onComplete:removeHitOverlay});
 			function removeHitOverlay():void {
 				_bagBody.removeChild(h);
 			}

@@ -1,4 +1,4 @@
-package
+package com.visualgoodness.compbeatdown.view
 {
 	import flash.display.MovieClip;
 	import flash.geom.Point;

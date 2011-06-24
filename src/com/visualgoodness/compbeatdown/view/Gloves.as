@@ -1,9 +1,10 @@
-package
+package com.visualgoodness.compbeatdown.view
 {
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.utils.setTimeout;
+	import com.visualgoodness.compbeatdown.events.HitEvent;
 	
 	public class Gloves extends Sprite
 	{	

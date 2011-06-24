@@ -1,10 +1,11 @@
-package
+package com.visualgoodness.compbeatdown.controller
 {
 	import com.greensock.TweenNano;
 	import com.greensock.easing.Sine;
 	import com.visualgoodness.controller.VGKeyboard;
 	
 	import flash.geom.Point;
+	import com.visualgoodness.compbeatdown.view.Gloves;
 
 	public class GlovesIntro
 	{

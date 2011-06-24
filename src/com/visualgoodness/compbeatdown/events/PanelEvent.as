@@ -1,4 +1,4 @@
-package
+package com.visualgoodness.compbeatdown.events
 {
 	import flash.events.Event;
 	import flash.geom.Point;

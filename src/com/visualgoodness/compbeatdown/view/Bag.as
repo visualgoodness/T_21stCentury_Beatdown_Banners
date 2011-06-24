@@ -1,4 +1,4 @@
-package
+package com.visualgoodness.compbeatdown.view
 {
 	import com.visualgoodness.controller.VGKeyboard;
 	
@@ -6,6 +6,7 @@ package
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import com.visualgoodness.compbeatdown.model.ScoreKeeper;
 	
 	public class Bag extends MovieClip
 	{

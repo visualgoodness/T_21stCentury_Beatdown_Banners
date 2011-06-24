@@ -1,10 +1,11 @@
-package
+package com.visualgoodness.compbeatdown.view
 {
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import com.visualgoodness.compbeatdown.interfaces.IStartMenuDelegate;
 	
-	public class StartMenu extends MovieClip implements IDropDownButtonDelegate
+	public class StartMenu extends MovieClip
 	{
 		private var _startBtn:MovieClip;
 		private var _insuranceBtn:DropDownButton;
@@ -19,13 +20,8 @@ package
 		{
 			_startBtn = this["start_btn"] as MovieClip;
 			_insuranceBtn = this["insurance_btn"] as DropDownButton;
-			_insuranceBtn.delegate = this;
 			
 			_startBtn.addEventListener(MouseEvent.CLICK, startClicked);
-		}
-		
-		public function selectionMade(text:String):void
-		{
 		}
 		
 		private function startClicked(e:MouseEvent):void
