@@ -9,10 +9,11 @@ package com.visualgoodness.compbeatdown.events
 		public static const REACTION_COMPLETE:String = "reactionComplete";
 		public static const R_HIT:String = "gloveRHit";
 		public static const L_HIT:String = "gloveLHit";		
+		public static const DRAW_BACK:String = "drawBack";		
 		
 		public var anchor:MovieClip;
 		
-		public function HitEvent(type:String, anchor:MovieClip)
+		public function HitEvent(type:String, anchor:MovieClip = null)
 		{
 			this.anchor = anchor;
 			super(type, true, false);

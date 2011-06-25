@@ -1,17 +1,19 @@
 package com.visualgoodness.compbeatdown.view
 {
+	import com.visualgoodness.compbeatdown.events.HitEvent;
+	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.utils.setTimeout;
-	import com.visualgoodness.compbeatdown.events.HitEvent;
 	
 	public class Gloves extends Sprite
 	{	
-		public static const JAB_R:int = 0;
-		public static const JAB_L:int = 1;
-		public static const HOOK:int = 2;
-		public static const LOW:int = 3;
+		public static const JAB_R:int 			= 0;
+		public static const JAB_L:int 			= 1;
+		public static const HOOK:int 			= 2;
+		public static const LOW:int 			= 3;
+		public static const CHEAP_SHOT:int 		= 4;
 		
 		private var _gloves:Array = [];
 		private var _gloveR:Glove;
@@ -28,12 +30,13 @@ package com.visualgoodness.compbeatdown.view
 		private var _punchType:String;
 		private var _alternate:Boolean = false;
 		private var _doIdleMovement:Boolean = true;
+		private var _currentPunchType:int;
 		
 		public function Gloves()
 		{
 			_gloveR = this["glove_R"] as Glove;
 			_gloveL = this["glove_L"] as Glove;
-			_gloveL.gloveFrame = 2;
+			_gloveL.gloveFrame = 3;
 			_gloves = [ _gloveL, _gloveR ];
 			
 			_gloveRStartX = _gloveR.x;
@@ -42,11 +45,22 @@ package com.visualgoodness.compbeatdown.view
 			_gloveL.addEventListener(HitEvent.HIT_COMPLETE, hitComplete);
 			_gloveR.addEventListener(HitEvent.HIT_COMPLETE, hitComplete);
 			
+			_gloveL.addEventListener(HitEvent.DRAW_BACK, drawBack);
+			_gloveR.addEventListener(HitEvent.DRAW_BACK, drawBack);
+			
 			addEventListener(Event.ENTER_FRAME, enterFrame);
 		}
 		
-		private function hitComplete(e:Event):void
+		private function drawBack(e:HitEvent):void
 		{
+			if (/*_currentPunchType == LOW || */_currentPunchType == CHEAP_SHOT)
+				_hittingGlove.gloveFrame++;
+		}
+		
+		private function hitComplete(e:HitEvent):void
+		{
+			if (/*_currentPunchType == LOW || */_currentPunchType == CHEAP_SHOT)
+				_hittingGlove.gloveFrame--;
 			_hittingGlove.hitting = false;
 		}
 		
@@ -57,9 +71,15 @@ package com.visualgoodness.compbeatdown.view
 		
 		public function punch(type:int):void
 		{
+			_currentPunchType = type;
 			if (!_hittingGlove.hitting)
 			{
-				if (type == JAB_L)
+				if (type == CHEAP_SHOT)
+				{
+					selectOtherGlove();
+					_punchType = "cheapShot";
+				}
+				else if (type == JAB_L)
 				{
 					_hittingGlove = _gloveL;
 					_nonHitGlove = _gloveR;

@@ -20,7 +20,12 @@ package com.visualgoodness.compbeatdown.view
 		
 		public function set gloveFrame(value:int):void
 		{
-			gloveBody.gotoAndPlay(value);
+			gloveBody.gotoAndStop(value);
+		}
+		
+		public function get gloveFrame():int
+		{
+			return gloveBody.currentFrame;
 		}
 		
 		public function update():void

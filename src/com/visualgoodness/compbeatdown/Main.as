@@ -1,21 +1,21 @@
 package com.visualgoodness.compbeatdown
 {
+	import com.visualgoodness.compbeatdown.controller.BoxingInputManager;
+	import com.visualgoodness.compbeatdown.events.HitEvent;
+	import com.visualgoodness.compbeatdown.interfaces.IBag;
+	import com.visualgoodness.compbeatdown.interfaces.IInputDelegate;
+	import com.visualgoodness.compbeatdown.interfaces.IInstructionsPanelDelegate;
+	import com.visualgoodness.compbeatdown.interfaces.IStartMenuDelegate;
+	import com.visualgoodness.compbeatdown.model.ScoreKeeper;
+	import com.visualgoodness.compbeatdown.view.Gloves;
+	import com.visualgoodness.compbeatdown.view.InstructionsPanel;
+	import com.visualgoodness.compbeatdown.view.Panel;
+	import com.visualgoodness.compbeatdown.view.StartMenu;
 	import com.visualgoodness.controller.VGKeyboard;
 	
 	import flash.display.MovieClip;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
-	import com.visualgoodness.compbeatdown.events.HitEvent;
-	import com.visualgoodness.compbeatdown.interfaces.IInputDelegate;
-	import com.visualgoodness.compbeatdown.interfaces.IInstructionsPanelDelegate;
-	import com.visualgoodness.compbeatdown.interfaces.IStartMenuDelegate;
-	import com.visualgoodness.compbeatdown.controller.BoxingInputManager;
-	import com.visualgoodness.compbeatdown.view.Gloves;
-	import com.visualgoodness.compbeatdown.interfaces.IBag;
-	import com.visualgoodness.compbeatdown.view.InstructionsPanel;
-	import com.visualgoodness.compbeatdown.view.Panel;
-	import com.visualgoodness.compbeatdown.model.ScoreKeeper;
-	import com.visualgoodness.compbeatdown.view.StartMenu;
 	
 	public class Main extends MovieClip implements IInputDelegate, IStartMenuDelegate, IInstructionsPanelDelegate
 	{
@@ -26,6 +26,7 @@ package com.visualgoodness.compbeatdown
 		private var _inputManager:BoxingInputManager;
 		private var _startMenu:StartMenu;
 		private var _instructionsPanel:InstructionsPanel;
+		private var _currentPunch:int;
 		
 		public function Main()
 		{
@@ -54,16 +55,18 @@ package com.visualgoodness.compbeatdown
 		
 		private function gameOver(e:Event):void
 		{
-			_instructionsPanel.showIndex(2);
-			_instructionsPanel.show();
+			setTimeout(function():void {
+				_instructionsPanel.showIndex(2);
+				_instructionsPanel.show();
+				gotoAndPlay("gameOver");
+			}, _score.gameOverTimeout);
+			
 			_inputManager.deactivate();
-			gotoAndPlay("gameOver");
 		}
 		
 		public function start(selectionIndex:int):void
 		{
 			_score.selectionIndex = selectionIndex;
-			trace("Main :: _score.selectionIndex = " + _score.selectionIndex);
 			gotoAndPlay("startGame");
 		}
 		
@@ -74,22 +77,19 @@ package com.visualgoodness.compbeatdown
 		
 		public function swing(punch:int):void
 		{
-			_gloves.punch(punch);
+			_currentPunch = punch;
+			_gloves.punch(cheapShot ? Gloves.CHEAP_SHOT : _currentPunch);
+		}
+		
+		private function get cheapShot():Boolean
+		{
+			return _score.cheapShotReady && _currentPunch == Gloves.LOW;
 		}
 		
 		private function hit(e:HitEvent):void
 		{
-			_score.hit();
-			if (e.type == HitEvent.R_HIT)
-			{
-				//_bag.hit(VGKeyboard.RIGHT);
-				_bag.hitWithLoc(Gloves.JAB_R, e.anchor);
-			}
-			else if (e.type == HitEvent.L_HIT)
-			{
-				//_bag.hit(VGKeyboard.LEFT);
-				_bag.hitWithLoc(Gloves.JAB_L, e.anchor);
-			}
+			_score.hit(cheapShot);
+			_bag.hitWithLoc(cheapShot, e.anchor);
 		}
 	}
 }

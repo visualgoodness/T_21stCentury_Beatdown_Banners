@@ -2,12 +2,12 @@ package com.visualgoodness.compbeatdown.view
 {
 	import com.greensock.TweenNano;
 	import com.greensock.easing.Sine;
+	import com.visualgoodness.compbeatdown.model.ScoreKeeper;
 	
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	import com.visualgoodness.compbeatdown.model.ScoreKeeper;
 	
 	public class Panel extends MovieClip
 	{
@@ -23,13 +23,15 @@ package com.visualgoodness.compbeatdown.view
 		private var _queue:Array = [];
 		private var _tweening:Boolean = false;
 		private var _textGroup:MovieClip;
+		private var _blurContainer:MovieClip;
 		
 		public function Panel()
 		{
 			_textGroup = this["panel_top"]["text_group_mc"] as MovieClip;
+			_blurContainer = _textGroup["blur_container_mc"] as MovieClip;
 			_textFields = [
-				_textGroup["number_strip_mc"]["num_mc_top"],
-				_textGroup["number_strip_mc"]["num_mc_bot"]
+				_blurContainer["number_strip_mc"]["num_mc_top"],
+				_blurContainer["number_strip_mc"]["num_mc_bot"]
 			];
 			var format:TextFormat = new TextFormat();
 			format.letterSpacing = _numbersLetterSpacing;
@@ -37,7 +39,7 @@ package com.visualgoodness.compbeatdown.view
 			{
 				TextField(t.txtfld).defaultTextFormat = format;
 			}
-			_numberStrip = _textGroup["number_strip_mc"] as MovieClip;
+			_numberStrip = _blurContainer["number_strip_mc"] as MovieClip;
 			_numberStripStartY = _numberStrip.y;
 			_rowHeight = MovieClip(_numberStrip["row_height_mc"]).height;
 			_cheapShotPanel = this["panel_sm_mc"] as MovieClip;
@@ -53,7 +55,6 @@ package com.visualgoodness.compbeatdown.view
 			_scoreKeeper.addEventListener(ScoreKeeper.SELECTION_UPDATED, selectionUpdated);
 			_scoreKeeper.addEventListener(ScoreKeeper.HIDE_CHEAP_SHOT, hideCheapShot);
 			_scoreKeeper.addEventListener(ScoreKeeper.SHOW_CHEAP_SHOT, showCheapShot);
-			_scoreKeeper.maxHits = _numberStrip.height / _rowHeight;
 		}
 		
 		private function cleanReset(e:Event):void
@@ -106,6 +107,7 @@ package com.visualgoodness.compbeatdown.view
 			_textFields.sortOn("y", Array.NUMERIC);
 			_textFields[1].txtfld.text = val;
 			var animDuration:Number = 0.2;
+			_blurContainer.play();
 			TweenNano.to(_textFields[0], animDuration, { y:-_rowHeight, ease:Sine.easeInOut, onComplete:function():void
 			{
 				_textFields[0].y = _rowHeight;

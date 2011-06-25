@@ -29,7 +29,7 @@ package com.visualgoodness.compbeatdown.view
 		
 		public function set scoreKeeper(value:ScoreKeeper):void {}
 			
-		public function hitWithLoc(key:int, anchor:MovieClip):void {}
+		public function hitWithLoc(cheapShot:Boolean, anchor:MovieClip):void {}
 		
 		public function hit(key:int):void
 		{
