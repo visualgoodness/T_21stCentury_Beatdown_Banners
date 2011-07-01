@@ -35,8 +35,7 @@ package com.visualgoodness.compbeatdown.view
 			];
 			var format:TextFormat = new TextFormat();
 			format.letterSpacing = _numbersLetterSpacing;
-			for each (var t:MovieClip in _textFields)
-			{
+			for each (var t:MovieClip in _textFields) {
 				TextField(t.txtfld).defaultTextFormat = format;
 			}
 			_numberStrip = _blurContainer["number_strip_mc"] as MovieClip;
@@ -85,6 +84,7 @@ package com.visualgoodness.compbeatdown.view
 		
 		private function selectionUpdated(e:Event):void
 		{
+			trace("Panel :: gotoAndStop( " + _scoreKeeper.selectionIndex + ")");
 			_textGroup.gotoAndStop(_scoreKeeper.selectionIndex+1);
 		}
 		

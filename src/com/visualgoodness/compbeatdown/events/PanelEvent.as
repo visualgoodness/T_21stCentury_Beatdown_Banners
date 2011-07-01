@@ -16,7 +16,8 @@ package com.visualgoodness.compbeatdown.events
 		public static var SHOW_BASKET:String = "showBasket";
 		public static var USER_INACTION:String = "userInaction";
 		public static var TOO_MANY_MISSES:String = "tooManyMisses";
-		public static var BALL_CREATED:String = "ballCreated";
+		public static var CONTROLS_HAVE_SHOWN_ONCE:String = "controlsHaveShownOnce";
+		public static var CONTROLS_SHOWN:String = "controlsShown";
 		
 		public var index:int;
 		public var loc:Point;

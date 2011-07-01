@@ -45,22 +45,11 @@ package com.visualgoodness.compbeatdown.view
 			_gloveL.addEventListener(HitEvent.HIT_COMPLETE, hitComplete);
 			_gloveR.addEventListener(HitEvent.HIT_COMPLETE, hitComplete);
 			
-			_gloveL.addEventListener(HitEvent.DRAW_BACK, drawBack);
-			_gloveR.addEventListener(HitEvent.DRAW_BACK, drawBack);
-			
 			addEventListener(Event.ENTER_FRAME, enterFrame);
-		}
-		
-		private function drawBack(e:HitEvent):void
-		{
-			if (/*_currentPunchType == LOW || */_currentPunchType == CHEAP_SHOT)
-				_hittingGlove.gloveFrame++;
 		}
 		
 		private function hitComplete(e:HitEvent):void
 		{
-			if (/*_currentPunchType == LOW || */_currentPunchType == CHEAP_SHOT)
-				_hittingGlove.gloveFrame--;
 			_hittingGlove.hitting = false;
 		}
 		

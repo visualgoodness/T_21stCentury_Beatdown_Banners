@@ -1,17 +1,23 @@
 package com.visualgoodness.compbeatdown.controller
 {
+	import com.visualgoodness.compbeatdown.interfaces.IInputDelegate;
+	import com.visualgoodness.compbeatdown.view.Gloves;
 	import com.visualgoodness.controller.VGKeyboard;
 	
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
-	import com.visualgoodness.compbeatdown.interfaces.IInputDelegate;
-	import com.visualgoodness.compbeatdown.view.Gloves;
+	import flash.utils.clearInterval;
+	import flash.utils.setInterval;
 
 	public class BoxingInputManager
 	{
 		private var _keyboard:VGKeyboard;
 		private var _delegate:IInputDelegate;
 		private var _mouseHitArea:MovieClip;
+		private var _interval:int;
+		private var _currentTime:int = 0;
+		private var _maxIdleTime:int = 5;
+		private var _idle:Boolean = false;
 		
 		public function BoxingInputManager(delegate:IInputDelegate, mouseHitArea:MovieClip)
 		{
@@ -33,10 +39,41 @@ package com.visualgoodness.compbeatdown.controller
 			_mouseHitArea.buttonMode = true;
 			_mouseHitArea.mouseEnabled = true;
 			_mouseHitArea.addEventListener(MouseEvent.CLICK, clicked);
+			
+			startTimer();
+		}
+		
+		private function startTimer():void
+		{
+			stopTimer();
+			_currentTime = 0;
+			_interval = setInterval(timerTick, 1000);
+		}
+		
+		public function idleNotificationComplete():void
+		{
+			startTimer();
+		}
+		
+		private function timerTick():void
+		{
+			//trace("timer tick = " + _currentTime);
+			if (_currentTime++ > _maxIdleTime)
+			{
+				stopTimer();
+				_delegate.userIsIdle();
+			}
+		}
+		
+		private function stopTimer():void
+		{
+			clearInterval(_interval);
 		}
 		
 		public function deactivate():void
-		{	
+		{
+			stopTimer();
+			
 			_keyboard.resetPolls();
 		
 			_mouseHitArea.buttonMode = false;
@@ -46,6 +83,8 @@ package com.visualgoodness.compbeatdown.controller
 		
 		private function onInput(keyCode:int):void
 		{
+			startTimer();
+				
 			var punch:int;
 			switch(keyCode)
 			{
@@ -71,21 +110,13 @@ package com.visualgoodness.compbeatdown.controller
 		
 		private function clicked(e:MouseEvent):void
 		{
-			var t:MovieClip = e.currentTarget as MovieClip;
-			var mx:Number = t.mouseX - t.width/2;
-			var my:Number = -t.mouseY + t.height/2;
-			var area:int = 0;
-			var rad:Number = Math.atan2(my,mx) / Math.PI * 180;
+			var t:MovieClip = _mouseHitArea;
+			var mx:Number = t.mouseX;
+			var my:Number = t.mouseY;
 			
-			// DIAGONAL
-			/*if (rad < 45 && rad > -45) swing(VGKeyboard.RIGHT);
-			if (rad > 135 && rad < 180) swing(VGKeyboard.LEFT);
-			if (rad > -180 && rad < -135) swing(VGKeyboard.LEFT);
-			if (rad > -135 && rad < -45) swing(VGKeyboard.DOWN);
-			if (rad > 45 && rad < 135) swing(VGKeyboard.UP);*/
-			
-			// HALF
-			if (mx > 0) onInput(VGKeyboard.RIGHT);
+			if (my < t.height * 0.33) onInput(VGKeyboard.UP);
+			else if (my > t.height * 0.66) onInput(VGKeyboard.DOWN);
+			else if (mx > t.width/2) onInput(VGKeyboard.RIGHT);
 			else onInput(VGKeyboard.LEFT);
 		}
 	}

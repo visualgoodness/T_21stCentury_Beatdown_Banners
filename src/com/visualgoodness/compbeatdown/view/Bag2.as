@@ -23,10 +23,12 @@ package com.visualgoodness.compbeatdown.view
 		private var _defaultShakeDuration:Number	= 0.5;
 		private var _longShakeDuration:Number		= 1.5;
 		private var _scoreKeeper:ScoreKeeper;
+		private var _hitContainer:MovieClip;
 		
 		public function Bag2()
 		{
 			_bagBody = this["bag_body_mc"] as MovieClip;
+			_hitContainer = _bagBody["hit_container_mc"] as MovieClip;
 			_startX = x;
 		}
 		
@@ -39,7 +41,6 @@ package com.visualgoodness.compbeatdown.view
 		
 		private function playReaction(e:ReactionEvent):void
 		{
-			trace("reaction_"+e.index);
 			gotoAndPlay("reaction_"+e.index);
 		}
 		
@@ -51,7 +52,7 @@ package com.visualgoodness.compbeatdown.view
 		public function hitWithLoc(cheapShot:Boolean, anchor:MovieClip):void
 		{
 			var h:HitOverlay = new HitOverlay();
-			_bagBody.addChild(h);
+			_hitContainer.addChild(h);
 			var p:Point = anchor.localToGlobal(new Point(anchor.x, anchor.y));
 			var q:Point = _bagBody.globalToLocal(p);
 			var loc:Number = ((q.x / _bagBody.widthMarker.width) - 0.5) * 1.5;
@@ -62,7 +63,7 @@ package com.visualgoodness.compbeatdown.view
 			h.body.rotation = loc * (15 + Math.random() * 30);
 			TweenNano.to(h, 1.8, { alpha:0, delay:0.8, onComplete:removeHitOverlay});
 			function removeHitOverlay():void {
-				_bagBody.removeChild(h);
+				_hitContainer.removeChild(h);
 			}
 			_hitOverlays.push(h);
 			shake(cheapShot ? _longShakeDuration : _defaultShakeDuration);

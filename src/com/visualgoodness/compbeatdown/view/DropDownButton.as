@@ -8,18 +8,21 @@ package com.visualgoodness.compbeatdown.view
 	
 	public class DropDownButton extends MovieClip
 	{
+		public static const ITEM_SELECTED:String = "dropDownButtonItemSelected";
+		
 		private var over:Boolean = false;
 		private var _dropDown:MovieClip;
 		private var _dropDownItems:Array = [];
-		public var selection:int = 0;
+		public var selection:int = -1;
 		public var selectionName:String = "";
 		private var clicked:Boolean = false;
 		private var expanded:Boolean = false;
+		private var defaultText:String;
 		
 		public function DropDownButton()
 		{
 			initial_hit_area.buttonMode = true;
-			
+			defaultText = this["selection_txt"].text;
 			//addEventListener(Event.ENTER_FRAME, run);
 			initial_hit_area.addEventListener(MouseEvent.CLICK, expand);
 			//addEventListener(MouseEvent.ROLL_OVER, expand);
@@ -28,17 +31,20 @@ package com.visualgoodness.compbeatdown.view
 			
 			_dropDown = this["dropdown_mc"] as MovieClip;
 			var index:int = 0;
-			for (var i:uint = 0; i < _dropDown.numChildren; i++)
+			for (var i:uint = 0; i < 5; i++)
 			{
-				if (_dropDown.getChildAt(i)["name"] == "item_" + (i-1))
-				{
-					var item:MovieClip = _dropDown.getChildAt(i) as MovieClip;
-					item.gotoAndStop(++index);
-					item.addEventListener(MouseEvent.CLICK, itemClicked);
-					item.buttonMode = true;
-					_dropDownItems.push(item);
-				}
+				var item:MovieClip = _dropDown["item_"+i] as MovieClip;
+				item.gotoAndStop(++index);
+				item.addEventListener(MouseEvent.CLICK, itemClicked);
+				item.buttonMode = true;
+				_dropDownItems.push(item);
 			}
+		}
+		
+		public function reset():void
+		{
+			this["selection_txt"].text = defaultText;
+			selection = -1;
 		}
 		
 		private function removed(e:Event):void
@@ -67,6 +73,8 @@ package com.visualgoodness.compbeatdown.view
 					break;
 				}
 			}
+			trace("DropDownButton :: selection = " + selection);
+			dispatchEvent(new Event(DropDownButton.ITEM_SELECTED));
 		}
 		
 		private function expand(e:MouseEvent):void
@@ -77,7 +85,7 @@ package com.visualgoodness.compbeatdown.view
 			gotoAndPlay("over");				 
 		}
 		
-		private function collapse(e:MouseEvent = null):void
+		public function collapse(e:MouseEvent = null):void
 		{
 			if (!expanded) return;
 			expanded = false;
