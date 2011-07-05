@@ -6,7 +6,8 @@ Specs: http://frontpage.solutions.yahoo.com/interactive.html
 
 Git: git@github.com:visualgoodness/T_21stCentury_Beatdown_Banners.git
 
-Libs: http://www.greensock.com/v11/
+Libs: GreenSock: http://www.greensock.com/v11/
+      VGFrameWork: git@github.com:visualgoodness/VGFramework.git
 
 Previous deliveries: http://sandbox.vgstaging.com/dwh/00001/20110701/   (dwh / mwr7k7)
 
