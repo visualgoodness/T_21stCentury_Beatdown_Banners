@@ -8,6 +8,8 @@ Git: git@github.com:visualgoodness/T_21stCentury_Beatdown_Banners.git
 
 Libs: http://www.greensock.com/v11/
 
+Previous deliveries: http://sandbox.vgstaging.com/dwh/00001/20110701/   (dwh / mwr7k7)
+
 Assets: /work/DonatWald+Haque/C1614-00001 21st Century WC Banners/Client Supplied
 	(same path for work drive and also FTP while moving -- 209.114.44.190 / vgftptemp / L4Py[9.t)
 
